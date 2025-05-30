@@ -1,4 +1,8 @@
-// names here
+/*  Team members
+eyhuang1, Eric, Huang
+mmohanra, Midhuna, Mohanraj
+wongdq, Destin, Wong   */
+
 
 #include<stdio.h> 
 #include <stdlib.h>
@@ -8,39 +12,18 @@
 int Lmin=10;
 int Lmax=1000;
 
+// struct to represent processor
 typedef struct {
     int load; // load of the processor
     int time_interval; // interval at which the processor balances its load
     int isSteady;
 } Processor;
 
-int rand_uniform(int max, int min){ // gives us value between 10, 1000 using uniform random distribution
-    // return ((rand() + min) % max); 
+int rand_uniform(int max, int min){ // gives us value between min, max using uniform random distribution
     return (rand() % (max - min + 1)) + min;
-    
-
-
     }
 
-
-int main() {
-    int k = 5;  //set number of processors
-    srand(time(NULL)); // seed the random number generator
-
-    int Dmin=100;
-    int Dmax=1000;
-    Processor loads[k]; //array to hold load struct for each proocessor
-    
-    
-    // define arry of processors(already done)
-    // assign each processor's load units with discrete uniform random variable
-        for(int i=0; i<k; i++) {
-            loads[i].load = rand_uniform(Lmax, Lmin); // assign random load units
-            loads[i].time_interval = rand_uniform(Dmax, Dmin); // assign random time interval
-            loads[i].isSteady = 0; // initialize steady state to false
-    }
-    
-    // make a struct containing the load + balance interval
+  // make a struct containing the load + balance interval
     // make array of structs repping the processors
     // make a for loop and start the balance simulation
     // during the loop, if cycle_number % time_interval = 0, then processor schedules load balancing activity
@@ -68,7 +51,23 @@ int main() {
                     // another hypothetical: current has 10, left has 2, right has 4, avg is 5 ;  // 2 10 4=16/3=5; // 5 6 5
                     // another hypothetical: 5 6 5
                     // avg is 5, so dont give
-    // int swaps = 0; // variable to count number of swaps
+int main() {
+    int k = 5;  //set number of processors
+    srand(time(NULL)); // seed the random number generator
+
+    int Dmin=100;
+    int Dmax=1000;
+    Processor loads[k]; //array to hold load struct for each proocessor
+    
+    
+    // define arry of processors(already done)
+    // assign each processor's load units with discrete uniform random variable
+        for(int i=0; i<k; i++) {
+            loads[i].load = rand_uniform(Lmax, Lmin); // assign random load units
+            loads[i].time_interval = rand_uniform(Dmax, Dmin); // assign random time interval
+            loads[i].isSteady = 0; // initialize steady state to false
+    }
+    
     for(int time=1; time < 1000000; time++){ // initialize and check if i is less than 100000
         
         // check if each processor has to do load balancing activity
@@ -78,11 +77,9 @@ int main() {
             int swaps = 0; // variable to count number of swaps
             // TODO: check if the system is in a balanced state
             if (time % loads[j].time_interval == 0){
-                // printf("Processor %d is balancing at time %d\n", j, time);
                 // load balancing activity
                 int avg = (loads[j].load + loads[left].load + loads[right].load)/3; // average load of 3 processors
                 if(loads[j].load > avg){
-                
                     if(loads[left].load < avg){
                         // distrubite to left processor
                         // give until left processor reaches average
@@ -102,11 +99,7 @@ int main() {
                         swaps +=1; // increment swap count
                         
                     }
-                    // int amounttogiveleft = avg - loads[(j-1)%k].load;
-                    // int amounttogiveright = avg - loads[(j+1)%k].load;
-                    // loads[j].load -= (amounttogiveleft + amounttogiveright); // give load units to neighbors
-                    // loads[(j-1)%k].load += amounttogiveleft; // give left neighbor
-                    // loads[(j+1)%k].load += amounttogiveright; // give right neighbor
+                    
                     
                 } // else do nothing
                 if(swaps == 0){
@@ -146,10 +139,6 @@ int main() {
                 if(abs(loads[j].load - average) > k){ // check if load is within 3 of first processor's load. Cases like 476 478 476, the average of these is 476, so no need to give load units.
                     printf("Not balanced at time %d\n", time);
                     balancedFlag=0;
-                    for(int j=0; j<k; j++){
-                        // printf("Processor %d load: %d\n", j, loads[j].load); // print loads of each processor
-                        // printf("Processor %d interval: %d\n", j, loads[j].time_interval); 
-                    }
                     break;
                 }
                 else{
@@ -160,11 +149,6 @@ int main() {
             
             if(balancedFlag == 1){
                 printf("Balanced state reached at time %d\n", time);
-                for(int j=0; j<k; j++){
-                    // printf("Processor %d load: %d\n", j, loads[j].load); // print loads of each processor
-                    // printf("Processor %d interval: %d\n", j, loads[j].time_interval); 
-                }
-                
                 break; // exit loop if balanced state is reached
             }
             break;
